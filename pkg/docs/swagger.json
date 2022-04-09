@@ -1,0 +1,46 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "flowflow api",
+        "contact": {},
+        "version": "vNext"
+    },
+    "paths": {
+        "/api/v1/version": {
+            "get": {
+                "description": "Get flowflow version",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "version"
+                ],
+                "summary": "Get flowflow version",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/v1.VersionResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "v1.VersionResponse": {
+            "type": "object",
+            "properties": {
+                "build_timestamp": {
+                    "type": "string"
+                },
+                "commit_hash": {
+                    "type": "string"
+                },
+                "version": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

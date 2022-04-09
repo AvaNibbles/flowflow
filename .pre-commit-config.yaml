@@ -1,0 +1,32 @@
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v2.0.0
+    hooks:
+      - id: trailing-whitespace
+      - id: check-added-large-files
+  - repo: local
+    hooks:
+      - id: gen
+        name: Generate code
+        entry: make gen
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: test
+        name: Unit tests
+        entry: make test
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: lint
+        name: Lint code
+        entry: make lint
+        language: system
+        always_run: true
+        pass_filenames: false
+      - id: format
+        name: Format code
+        entry: make fmt
+        language: system
+        always_run: true
+        pass_filenames: false

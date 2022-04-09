@@ -1,0 +1,29 @@
+definitions:
+  v1.VersionResponse:
+    properties:
+      build_timestamp:
+        type: string
+      commit_hash:
+        type: string
+      version:
+        type: string
+    type: object
+info:
+  contact: {}
+  title: flowflow api
+  version: vNext
+paths:
+  /api/v1/version:
+    get:
+      description: Get flowflow version
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/v1.VersionResponse'
+      summary: Get flowflow version
+      tags:
+      - version
+swagger: "2.0"
