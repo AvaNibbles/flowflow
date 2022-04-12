@@ -3,18 +3,75 @@ on:
     branches:
       - main
   pull_request:
-name: Test
+name: Build & Test
 jobs:
-  test:
+  build:
     strategy:
       matrix:
         go-version: [1.18.x]
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Set env vars
+        run: |
+          echo "CGO_ENABLED=0" >> $GITHUB_ENV
+          echo "${HOME}/goroot/bin" >> $GITHUB_PATH
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v3
-      - run: make build
-      - run: make test
+      - uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: build
+        run: make build
+  test:
+    strategy:
+      matrix:
+        go-version: [1.18.x]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set env vars
+        run: |
+          echo "${HOME}/goroot/bin" >> $GITHUB_PATH
+      - uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+      - uses: actions/checkout@v3
+      - uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: setup test environment
+        run: |
+          cd ./.devcontainer
+          docker-compose up -d
+      - name: build
+        run: make build
+      - name: test
+        run: make test
+        env:
+          FLOWFLOW_HTTP_PORT: 8081
+          FLOWFLOW_HTTP_HOST: localhost
+
+          # Devcontainer minio
+          AWS_ACCESS_KEY_ID: root
+          AWS_SECRET_ACCESS_KEY: password
+
+          # Storage
+          FLOWFLOW_STORAGE_S3_ENDPOINT: http://localhost:9000
+          FLOWFLOW_STORAGE_S3_REGION: us-east-1
+          FLOWFLOW_STORAGE_S3_BUCKETNAME: test
+          FLOWFLOW_STORAGE_S3_DISABLESSL: true
+          FLOWFLOW_STORAGE_S3_FORCEPATHSTYLE: true
+
+          # Postgres
+          FLOWFLOW_DB_POSTGRES_HOST: localhost
+          FLOWFLOW_DB_POSTGRES_USERNAME: postgres
+          FLOWFLOW_DB_POSTGRES_PASSWORD: password
+          FLOWFLOW_DB_POSTGRES_DATABASE: postgres

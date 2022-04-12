@@ -4,7 +4,9 @@ import "gorm.io/gorm"
 
 func Migrate(db *gorm.DB) error {
 	return db.AutoMigrate(
-		&Experiment{},
+		&MLModel{},
+		&MLModelVersion{},
+		&MLModelVersionFile{},
 		&Namespace{},
 		&ServiceMetadata{})
 }

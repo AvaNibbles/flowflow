@@ -65,3 +65,7 @@ func initConfig() error {
 
 	return nil
 }
+
+func SetupTestingConfig() error {
+	return initConfig()
+}
