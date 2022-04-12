@@ -12,10 +12,20 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     steps:
+      - name: Set env vars
+        run: |
+          echo "CGO_ENABLED=0" >> $GITHUB_ENV
+          echo "${HOME}/goroot/bin" >> $GITHUB_PATH
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v3
+      - uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
       - name: build
         run: make build
   test:
@@ -24,10 +34,20 @@ jobs:
         go-version: [1.18.x]
     runs-on: ubuntu-latest
     steps:
+      - name: Set env vars
+        run: |
+          echo "CGO_ENABLED=0" >> $GITHUB_ENV
+          echo "${HOME}/goroot/bin" >> $GITHUB_PATH
       - uses: actions/setup-go@v3
         with:
           go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v3
+      - uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
       - name: setup test environment
         run: |
           cd ./.devcontainer
