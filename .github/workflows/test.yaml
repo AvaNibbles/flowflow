@@ -36,7 +36,6 @@ jobs:
     steps:
       - name: Set env vars
         run: |
-          echo "CGO_ENABLED=0" >> $GITHUB_ENV
           echo "${HOME}/goroot/bin" >> $GITHUB_PATH
       - uses: actions/setup-go@v3
         with:
