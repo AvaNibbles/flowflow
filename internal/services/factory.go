@@ -15,6 +15,7 @@ type DependencyFactory interface {
 	GetDomain() *domain.DomainFactory
 	GetStorage() storage.Service
 	GetLogger(component string) *zap.Logger
+	GetDb() *gorm.DB
 }
 
 type DependencyConfig struct {
@@ -57,4 +58,8 @@ func (d *dependencyFactory) GetLogger(component string) *zap.Logger {
 
 func (d *dependencyFactory) GetDomain() *domain.DomainFactory {
 	return d.domain
+}
+
+func (d *dependencyFactory) GetDb() *gorm.DB {
+	return d.db
 }

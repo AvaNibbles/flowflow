@@ -16,5 +16,31 @@ jobs:
         with:
           go-version: ${{ matrix.go-version }}
       - uses: actions/checkout@v3
-      - run: make build
-      - run: make test
+      - name: setup test environment
+        run: |
+          cd ./.devcontainer
+          docker-compose up -d
+      - name: build
+        run: make build
+      - name: test
+        run: make test
+        env:
+          FLOWFLOW_HTTP_PORT: 8081
+          FLOWFLOW_HTTP_HOST: localhost
+
+          # Devcontainer minio
+          AWS_ACCESS_KEY_ID: root
+          AWS_SECRET_ACCESS_KEY: password
+
+          # Storage
+          FLOWFLOW_STORAGE_S3_ENDPOINT: http://localhost:9000
+          FLOWFLOW_STORAGE_S3_REGION: us-east-1
+          FLOWFLOW_STORAGE_S3_BUCKETNAME: test
+          FLOWFLOW_STORAGE_S3_DISABLESSL: true
+          FLOWFLOW_STORAGE_S3_FORCEPATHSTYLE: true
+
+          # Postgres
+          FLOWFLOW_DB_POSTGRES_HOST: localhost
+          FLOWFLOW_DB_POSTGRES_USERNAME: postgres
+          FLOWFLOW_DB_POSTGRES_PASSWORD: password
+          FLOWFLOW_DB_POSTGRES_DATABASE: postgres

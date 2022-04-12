@@ -24,3 +24,7 @@ func New(db *gorm.DB, logger *zap.Logger, wg *sync.WaitGroup) *DomainFactory {
 func (d *DomainFactory) NewMaintenanceService() MaintenanceService {
 	return newMaintenanceService(d)
 }
+
+func (d *DomainFactory) NewMLModelService() MLModelService {
+	return newMLModelService(d)
+}
