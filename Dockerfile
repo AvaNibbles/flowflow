@@ -1,7 +1,8 @@
-FROM node:14.19 as web-builder
+FROM node:16.12 as web-builder
 
 WORKDIR /builder
-COPY ./web/package-*.json .
+COPY ./web/package.json .
+COPY ./web/package-lock.json .
 RUN npm install
 
 COPY ./web .
