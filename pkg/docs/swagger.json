@@ -6,6 +6,71 @@
         "version": "vNext"
     },
     "paths": {
+        "/api/v1/hack/err/{code}": {
+            "get": {
+                "description": "Make an error",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "hack"
+                ],
+                "summary": "Make an error",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "http code",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/apimodels.HttpError"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/apimodels.HttpError"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/apimodels.HttpError"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/apimodels.HttpError"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/apimodels.HttpError"
+                        }
+                    },
+                    "409": {
+                        "description": "Conflict",
+                        "schema": {
+                            "$ref": "#/definitions/apimodels.HttpError"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/apimodels.HttpError"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/version": {
             "get": {
                 "description": "Get flowflow version",
@@ -28,6 +93,17 @@
         }
     },
     "definitions": {
+        "apimodels.HttpError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
         "v1.VersionResponse": {
             "type": "object",
             "properties": {

@@ -15,7 +15,7 @@ type MaintenanceService interface {
 	OnServiceStart() error
 }
 
-func newMaintenanceService(d *DomainFactory) MaintenanceService {
+func newMaintenanceService(d *Factory) MaintenanceService {
 	return &maintenanceService{
 		db:     d.db,
 		logger: d.logger.With(zap.String("component", "maintenance")),

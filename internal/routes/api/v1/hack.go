@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
+
+	"github.com/avanibbles/flowflow/internal/util"
 
 	"github.com/avanibbles/flowflow/internal/services/storage"
 	"go.uber.org/zap"
@@ -16,6 +19,7 @@ import (
 func setupHackRoutes(deps services.DependencyFactory, router *echo.Group) error {
 	router.POST("/s3/objects", uploadObject(deps))
 	router.GET("/s3/objects/:key", downloadObject(deps))
+	router.GET("/err/:code", makeStatusError())
 	return nil
 }
 
@@ -62,5 +66,31 @@ func downloadObject(deps services.DependencyFactory) echo.HandlerFunc {
 
 		logger.Info("download object complete", zap.Int64("bytes", bytesWritten))
 		return nil
+	}
+}
+
+// MakeError godoc
+// @Summary      Make an error
+// @Description  Make an error
+// @Tags         hack
+// @Produce      json
+// @Param        code  path      int  true  "http code"
+// @Success      200   {object}  apimodels.HttpError
+// @Failure      400   {object}  apimodels.HttpError
+// @Failure      401   {object}  apimodels.HttpError
+// @Failure      403   {object}  apimodels.HttpError
+// @Failure      404   {object}  apimodels.HttpError
+// @Failure      409   {object}  apimodels.HttpError
+// @Failure      500   {object}  apimodels.HttpError
+// @Router       /api/v1/hack/err/{code} [get]
+func makeStatusError() echo.HandlerFunc {
+	return func(c echo.Context) error {
+		code := c.Param("code")
+		codeNum, err := strconv.Atoi(code)
+		if err != nil {
+			return err
+		}
+
+		return util.MakeStatusErr(codeNum, "test", nil)
 	}
 }

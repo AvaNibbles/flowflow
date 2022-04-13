@@ -10,6 +10,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
+	"github.com/avanibbles/flowflow/pkg/client/hack"
 	"github.com/avanibbles/flowflow/pkg/client/version"
 )
 
@@ -55,6 +56,7 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *Flowflowcl
 
 	cli := new(Flowflowclient)
 	cli.Transport = transport
+	cli.Hack = hack.New(transport, formats)
 	cli.Version = version.New(transport, formats)
 	return cli
 }
@@ -100,6 +102,8 @@ func (cfg *TransportConfig) WithSchemes(schemes []string) *TransportConfig {
 
 // Flowflowclient is a client for flowflowclient
 type Flowflowclient struct {
+	Hack hack.ClientService
+
 	Version version.ClientService
 
 	Transport runtime.ClientTransport
@@ -108,5 +112,6 @@ type Flowflowclient struct {
 // SetTransport changes the transport on the client and all its subresources
 func (c *Flowflowclient) SetTransport(transport runtime.ClientTransport) {
 	c.Transport = transport
+	c.Hack.SetTransport(transport)
 	c.Version.SetTransport(transport)
 }

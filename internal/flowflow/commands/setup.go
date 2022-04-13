@@ -12,7 +12,7 @@ import (
 )
 
 func SetupCommand(cmd *cobra.Command) {
-	cmd.AddCommand(versionCommand, serveCommand, configCommand)
+	cmd.AddCommand(versionCommand, serveCommand, configCommand, hackCommand)
 }
 
 var (

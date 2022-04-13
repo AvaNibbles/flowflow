@@ -1,0 +1,13 @@
+.devcontainer
+.github
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+dist/
+tmp/
+.flowflow.yaml
+*.env
+dockerignore
+Dockerfile

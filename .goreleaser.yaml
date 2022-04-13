@@ -12,9 +12,9 @@ builds:
     main: ./cmd/flowflow
     ldflags:
       - -s -w
-      - -X internal.Version={{.Version}}
-      - -X internal.CommitHash={{.FullCommit}}
-      - -X internal.BuildTime={{.Timestamp}}
+      - -X github.com/avanibbles/flowflow/internal.Version={{.Version}}
+      - -X github.com/avanibbles/flowflow/internal.CommitHash={{.FullCommit}}
+      - -X github.com/avanibbles/flowflow/internal.BuildTimestamp={{.Timestamp}}
 archives:
   - replacements:
       darwin: Darwin

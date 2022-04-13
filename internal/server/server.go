@@ -11,6 +11,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/avanibbles/flowflow/internal/util"
+
 	"github.com/avanibbles/flowflow/pkg/config"
 
 	"github.com/avanibbles/flowflow/pkg/docs"
@@ -45,6 +47,7 @@ func (s *Server) buildHttp() (*http.Server, error) {
 	e := echo.New()
 	e.Use(ZapLogger(s.logger, []string{"/health/*"}))
 	e.Use(middleware.Recover())
+	e.HTTPErrorHandler = util.MakeEchoErrorHandler(s.logger.With(zap.String("component", "HttpErrorHandler")))
 
 	docs.SwaggerInfo.Version = internal.Version
 	e.GET("/swagger/*", echoSwagger.WrapHandler)

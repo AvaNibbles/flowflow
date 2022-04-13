@@ -12,10 +12,11 @@ import (
 )
 
 type DependencyFactory interface {
-	GetDomain() *domain.DomainFactory
+	GetDomain() *domain.Factory
 	GetStorage() storage.Service
 	GetLogger(component string) *zap.Logger
 	GetDb() *gorm.DB
+	GetConfig() *config.Config
 }
 
 type DependencyConfig struct {
@@ -37,15 +38,16 @@ func NewDependencyFactory(config *DependencyConfig) (DependencyFactory, error) {
 
 	domainFactory := domain.New(dbInstance, config.Logger, config.Wg)
 
-	return &dependencyFactory{logger: config.Logger, storage: s, db: dbInstance, domain: domainFactory}, nil
+	return &dependencyFactory{logger: config.Logger, storage: s, db: dbInstance, domain: domainFactory, config: config.Config}, nil
 }
 
 type dependencyFactory struct {
 	logger *zap.Logger
+	config *config.Config
 
 	storage storage.Service
 	db      *gorm.DB
-	domain  *domain.DomainFactory
+	domain  *domain.Factory
 }
 
 func (d *dependencyFactory) GetStorage() storage.Service {
@@ -56,10 +58,14 @@ func (d *dependencyFactory) GetLogger(component string) *zap.Logger {
 	return d.logger.With(zap.String("component", component))
 }
 
-func (d *dependencyFactory) GetDomain() *domain.DomainFactory {
+func (d *dependencyFactory) GetDomain() *domain.Factory {
 	return d.domain
 }
 
 func (d *dependencyFactory) GetDb() *gorm.DB {
 	return d.db
+}
+
+func (d *dependencyFactory) GetConfig() *config.Config {
+	return d.config
 }

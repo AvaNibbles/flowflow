@@ -6,8 +6,9 @@ import (
 )
 
 type Http struct {
-	Host string `mapstructure:"host" default:""`
-	Port int    `mapstructure:"port" default:"9002"`
+	Host     string `mapstructure:"host" default:""`
+	Port     int    `mapstructure:"port" default:"9002"`
+	SiteData string `mapstructure:"sitedata"`
 }
 
 type Config struct {

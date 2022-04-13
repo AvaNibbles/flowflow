@@ -7,24 +7,28 @@ import (
 	"gorm.io/gorm"
 )
 
-type DomainFactory struct {
+type Factory struct {
 	db     *gorm.DB
 	logger *zap.Logger
 	wg     *sync.WaitGroup
 }
 
-func New(db *gorm.DB, logger *zap.Logger, wg *sync.WaitGroup) *DomainFactory {
-	return &DomainFactory{
+func New(db *gorm.DB, logger *zap.Logger, wg *sync.WaitGroup) *Factory {
+	return &Factory{
 		db:     db,
 		logger: logger,
 		wg:     wg,
 	}
 }
 
-func (d *DomainFactory) NewMaintenanceService() MaintenanceService {
+func (d *Factory) NewMaintenanceService() MaintenanceService {
 	return newMaintenanceService(d)
 }
 
-func (d *DomainFactory) NewMLModelService() MLModelService {
+func (d *Factory) NewMLModelService() MLModelService {
 	return newMLModelService(d)
+}
+
+func (d *Factory) NewNamespaceService() NamespaceService {
+	return newNamespaceService(d)
 }
